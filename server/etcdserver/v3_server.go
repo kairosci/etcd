@@ -363,7 +363,7 @@ func (s *EtcdServer) Txn(ctx context.Context, r *pb.TxnRequest) (*pb.TxnResponse
 		}(time.Now())
 
 		get := func() {
-			resp, _, err = txn.Txn(ctx, s.Logger(), r, s.Cfg.ServerFeatureGate.Enabled(features.TxnModeWriteWithSharedBuffer), s.KV(), s.lessor)
+			resp, _, err = txn.Txn(ctx, s.Logger(), r, s.Cfg.ServerFeatureGate.Enabled(features.TxnModeWriteWithSharedBuffer), s.KV(), s.lessor, nil, 0)
 		}
 		if serr := s.doSerialize(ctx, chk, get); serr != nil {
 			return nil, serr
@@ -1064,7 +1064,8 @@ func (s *EtcdServer) processInternalRaftRequestOnce(ctx context.Context, r *pb.I
 	}
 
 	r.Header = &pb.RequestHeader{
-		ID: s.reqIDGen.Next(),
+		ID:                s.reqIDGen.Next(),
+		RequesterMemberId: uint64(s.memberID),
 	}
 
 	// check authinfo if it is not InternalAuthenticateRequest

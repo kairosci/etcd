@@ -30,9 +30,10 @@ type RequestHeader struct {
 	// username is a username that is associated with an auth token of gRPC connection
 	Username string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	// auth_revision is a revision number of auth.authStore. It is not related to mvcc
-	AuthRevision  uint64 `protobuf:"varint,3,opt,name=auth_revision,json=authRevision,proto3" json:"auth_revision,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	AuthRevision      uint64 `protobuf:"varint,3,opt,name=auth_revision,json=authRevision,proto3" json:"auth_revision,omitempty"`
+	RequesterMemberId uint64 `protobuf:"varint,4,opt,name=requester_member_id,json=requesterMemberId,proto3" json:"requester_member_id,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *RequestHeader) Reset() {
@@ -82,6 +83,13 @@ func (x *RequestHeader) GetUsername() string {
 func (x *RequestHeader) GetAuthRevision() uint64 {
 	if x != nil {
 		return x.AuthRevision
+	}
+	return 0
+}
+
+func (x *RequestHeader) GetRequesterMemberId() uint64 {
+	if x != nil {
+		return x.RequesterMemberId
 	}
 	return 0
 }
@@ -484,11 +492,12 @@ var File_raft_internal_proto protoreflect.FileDescriptor
 
 const file_raft_internal_proto_rawDesc = "" +
 	"\n" +
-	"\x13raft_internal.proto\x12\fetcdserverpb\x1a\trpc.proto\x1a etcd/api/versionpb/version.proto\x1a&etcd/api/membershippb/membership.proto\"r\n" +
+	"\x13raft_internal.proto\x12\fetcdserverpb\x1a\trpc.proto\x1a etcd/api/versionpb/version.proto\x1a&etcd/api/membershippb/membership.proto\"\xab\x01\n" +
 	"\rRequestHeader\x12\x0e\n" +
 	"\x02ID\x18\x01 \x01(\x04R\x02ID\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12,\n" +
-	"\rauth_revision\x18\x03 \x01(\x04B\a\x8a\xb5\x18\x033.1R\fauthRevision:\a\x82\xb5\x18\x033.0\"\x98\x13\n" +
+	"\rauth_revision\x18\x03 \x01(\x04B\a\x8a\xb5\x18\x033.1R\fauthRevision\x127\n" +
+	"\x13requester_member_id\x18\x04 \x01(\x04B\a\x8a\xb5\x18\x033.7R\x11requesterMemberId:\a\x82\xb5\x18\x033.0\"\x98\x13\n" +
 	"\x13InternalRaftRequest\x123\n" +
 	"\x06header\x18d \x01(\v2\x1b.etcdserverpb.RequestHeaderR\x06header\x12\x0e\n" +
 	"\x02ID\x18\x01 \x01(\x04R\x02ID\x120\n" +
